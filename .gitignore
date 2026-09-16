@@ -1,0 +1,64 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+ENV/
+
+# Environment Variables & Secrets (PostgreSQL credentials, API keys)
+.env
+.env.local
+*.env
+
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Distribution / Packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Database / Local Storage
+*.sqlite3
+*.db
+# Dump files if you export local Postgres backups
+*.sql
+*.dump
+
+# IDEs and Code Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Testing & Type Checking
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Saved plots / Output reports (optional, uncomment if you don't want PNGs in git)
+# *.png
+# *.jpg
+# reports/
