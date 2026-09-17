@@ -1,5 +1,4 @@
 import os
-from datetime import datetime
 from dotenv import load_dotenv
 import pandas as pd
 from sqlalchemy import (
@@ -15,8 +14,10 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import insert
 
+# override=True ensures .env values always take precedence
 load_dotenv(override=True)
 
+# Build connection using the IPv4 Pooler host
 db_url = URL.create(
     drivername="postgresql+psycopg2",
     username=os.getenv("DB_USER", "postgres.xniwhxycifvhosxpbblp"),
@@ -49,12 +50,10 @@ def init_db():
 
 def load_cached_data(ticker: str, start: str) -> pd.DataFrame:
   """Queries PostgreSQL for stored bars for this ticker from start date onwards."""
-  start_dt = datetime.strptime(start, "%Y-%m-%d").date()
-
   query = (
       select(ohlcv_table)
       .where(ohlcv_table.c.ticker == ticker.upper())
-      .where(ohlcv_table.c.date >= start_dt)
+      .where(ohlcv_table.c.date >= start)
       .order_by(ohlcv_table.c.date.asc())
   )
 
