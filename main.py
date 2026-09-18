@@ -64,6 +64,7 @@ def main():
   print(f"Sharpe Ratio:            {res.sharpe_ratio:.2f}")
   print(f"Max Drawdown:            {res.max_drawdown * 100:.2f}%")
   print(f"Total Trades:            {res.total_trades}")
+  print(f"Est. Friction Drag:     -${res.total_friction_cost:,.2f}")
   print("=" * 45 + "\n")
 
 
