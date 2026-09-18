@@ -35,6 +35,19 @@ def main():
       default=10000.0,
       help="Starting capital (default: 10000)",
   )
+  # Execution friction flags: flat dollar commission and decimal slippage
+  parser.add_argument(
+      "--commission",
+      type=float,
+      default=1.0,
+      help="Flat commission fee per trade in USD (default: 1.0)",
+  )
+  parser.add_argument(
+      "--slippage",
+      type=float,
+      default=0.0005,
+      help="Slippage percentage per trade in decimal (default: 0.0005 for 0.05%)",
+  )
 
   args = parser.parse_args()
 
@@ -48,7 +61,12 @@ def main():
 
   # Run the simulation
   print("Simulating trades...")
-  engine = Backtester(data=data, initial_cash=args.cash)
+  engine = Backtester(
+      data=data,
+      initial_cash=args.cash,
+      commission=args.commission,
+      slippage_pct=args.slippage,
+  )
   res = engine.run()
 
   # Print results cleanly with standard Python prints
