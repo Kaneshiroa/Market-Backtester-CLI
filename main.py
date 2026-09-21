@@ -2,6 +2,7 @@ import argparse
 from data.fetcher import get_historical_data
 from engine.backtester import Backtester
 from engine.indicators import add_sma_indicators
+import plotext as plt
 
 
 def main():
@@ -84,6 +85,18 @@ def main():
   print(f"Total Trades:            {res.total_trades}")
   print(f"Est. Friction Drag:     -${res.total_friction_cost:,.2f}")
   print("=" * 45 + "\n")
+
+  # Render terminal equity curve chart
+  dates = [d.strftime("%Y-%m-%d") for d in res.equity_curve.index]
+  values = res.equity_curve.values.tolist()
+
+  plt.clf()
+  plt.date_form("Y-m-d")
+  plt.plot(dates, values, label="Strategy Equity")
+  plt.title(f"{args.ticker.upper()} Portfolio Equity Curve ($)")
+  plt.theme("clear")
+  plt.plotsize(80, 20)
+  plt.show()
 
 
 if __name__ == "__main__":
