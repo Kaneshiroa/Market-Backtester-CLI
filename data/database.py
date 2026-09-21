@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 from dotenv import load_dotenv
 import pandas as pd
@@ -49,11 +50,17 @@ def init_db():
 
 
 def load_cached_data(ticker: str, start: str) -> pd.DataFrame:
-  """Queries PostgreSQL for stored bars for this ticker from start date onwards."""
+  """Queries PostgreSQL for stored bars.
+
+  Returns data only if the cache covers the requested start date.
+  """
+  start_dt = datetime.strptime(start, "%Y-%m-%d").date()
+
+  # 1. Fetch all available bars from start date onwards
   query = (
       select(ohlcv_table)
       .where(ohlcv_table.c.ticker == ticker.upper())
-      .where(ohlcv_table.c.date >= start)
+      .where(ohlcv_table.c.date >= start_dt)
       .order_by(ohlcv_table.c.date.asc())
   )
 
@@ -61,6 +68,13 @@ def load_cached_data(ticker: str, start: str) -> pd.DataFrame:
     df = pd.read_sql(query, conn)
 
   if df.empty:
+    return pd.DataFrame()
+
+  # 2. Check if the cache actually covers the beginning of the requested window
+  # Allow up to 4 calendar days of wiggle room for market weekends/holidays
+  earliest_cached_date = df["date"].min()
+  if (earliest_cached_date - start_dt).days > 4:
+    # We don't have the early history; trigger a fetch
     return pd.DataFrame()
 
   df["date"] = pd.to_datetime(df["date"])
